@@ -9,18 +9,19 @@ from plotly.graph_objs import *
 
 ###### Define your variables #####
 tabtitle = 'Titanic!'
-color1='#92A5E8'
-color2='#8E44AD'
-color3='#FFC300'
+color1='#919191'
+color2='#1C506A'
+color3='#FFC0CB'
 sourceurl = 'https://www.kaggle.com/c/titanic'
-githublink = 'https://github.com/austinlasseter/titanic-example-app'
+githublink = 'https://github.com/ihdorfman/titanic-example-app'
 
 
 ###### Import a dataframe #######
 df = pd.read_csv("https://raw.githubusercontent.com/austinlasseter/plotly_dash_tutorial/master/00%20resources/titanic.csv")
 df['Female']=df['Sex'].map({'male':0, 'female':1})
+df['Sex']=df['Sex'].map({'male':'Male', 'female':'Female'})
 df['Cabin Class'] = df['Pclass'].map({1:'first', 2: 'second', 3:'third'})
-variables_list=['Survived', 'Female', 'Fare', 'Age']
+variables_list=['Survived', 'Fare', 'Age']
 
 ########### Initiate the app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -48,7 +49,7 @@ app.layout = html.Div([
 @app.callback(dash.dependencies.Output('display-value', 'figure'),
               [dash.dependencies.Input('dropdown', 'value')])
 def display_value(continuous_var):
-    results=pd.DataFrame(df.groupby(['Cabin Class', 'Embarked'])[continuous_var].mean())
+    results=pd.DataFrame(df.groupby(['Cabin Class', 'Sex'])[continuous_var].mean())
     # Create a grouped bar chart
     mydata1 = go.Bar(
         x=results.loc['first'].index,
@@ -71,7 +72,7 @@ def display_value(continuous_var):
 
     mylayout = go.Layout(
         title='Grouped bar chart',
-        xaxis = dict(title = 'Port of Embarkation'), # x-axis label
+        xaxis = dict(title = 'Gender'), # x-axis label
         yaxis = dict(title = str(continuous_var)), # y-axis label
 
     )
